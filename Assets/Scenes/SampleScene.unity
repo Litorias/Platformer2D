@@ -248,6 +248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 652587222}
   _speedX: 1
+  _jumpForce: 200
 --- !u!50 &652587222
 Rigidbody2D:
   serializedVersion: 4
@@ -390,7 +391,7 @@ GameObject:
   - component: {fileID: 1812640863}
   m_Layer: 0
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
