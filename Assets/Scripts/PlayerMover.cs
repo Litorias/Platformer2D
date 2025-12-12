@@ -7,47 +7,39 @@ using UnityEngine;
 public class PlayerMover : MonoBehaviour
 {
     private const float SPEED_COEFFICIENT = 50;
-    private const string HORIZONTAL_AXIS = "Horizontal";
-    private const string GROUND_TAG = "Ground";
 
     [SerializeField] private float _speedX = 1;
     [SerializeField] private float _jumpForce = 100;
 
     private Rigidbody2D _rigidbody;
-    private float _direction;
-    private bool _isJump;
-    private bool _isGround;
+    private bool _isTurnRight = true;
 
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    public void Jump()
     {
-        _direction = Input.GetAxis(HORIZONTAL_AXIS);
+        _rigidbody.AddForce(new Vector2(0, _jumpForce));
+    }
+    public void Move(float direction)
+    {
+        _rigidbody.velocity = new Vector2(_speedX * direction * SPEED_COEFFICIENT * Time.fixedDeltaTime, _rigidbody.velocity.y);
 
-        if (_isGround && Input.GetKeyDown(KeyCode.W))
+        if ((direction > 0 && _isTurnRight == false)
+            || (direction < 0 && _isTurnRight))
         {
-            _isJump = true;
+            Flip();
         }
     }
 
-    private void FixedUpdate()
+    private void Flip()
     {
-        _rigidbody.velocity = new Vector2(_speedX * _direction * SPEED_COEFFICIENT * Time.fixedDeltaTime, _rigidbody.velocity.y);
-
-        if (_isJump)
-        {
-            _rigidbody.AddForce(new Vector2(0, _jumpForce));
-            _isJump = false;
-            _isGround = false;
-        }
+        _isTurnRight = !_isTurnRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
     }
 
-        private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag(GROUND_TAG)) 
-            _isGround = true;
-    }
 }
