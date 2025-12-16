@@ -14,11 +14,12 @@ public class Enemy : MonoBehaviour
     private bool _isTurnRight = true;
     private int _wayPointIndex;
     private Transform _target;
-    private float _maxSqrDistance = 0.01f;
+    private float _maxSqrDistance = 0.03f;
 
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _target = _wayPoints[_wayPointIndex].transform;
     }
 
     private void FixedUpdate()
@@ -35,15 +36,30 @@ public class Enemy : MonoBehaviour
         _rigidbody.MovePosition(newPosition);
     }
 
-    private void ChangeTarget()
+    private bool IsTargetReached()
     {
         float sqeDistance = (transform.position - _target.position).sqrMagnitude;
 
         return sqeDistance < _maxSqrDistance;
     }
 
-    private bool IsTargetReached()
+    private void ChangeTarget()
     {
-        throw new NotImplementedException();
+        _wayPointIndex = ++_wayPointIndex % _wayPoints.Length;
+        _target = _wayPoints[_wayPointIndex].transform;
+
+        if ((transform.position.x < _target.position.x && _isTurnRight == false)
+            || (transform.position.x > _target.position.x && _isTurnRight))
+        {
+            Flip();
+        }
+    }
+
+    private void Flip()
+    {
+        _isTurnRight = !_isTurnRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
     }
 }
