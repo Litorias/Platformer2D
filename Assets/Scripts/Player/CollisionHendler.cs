@@ -5,12 +5,21 @@ using UnityEngine;
 
 public class CollisionHendler : MonoBehaviour
 {
-    public event Action<Finish> FinishReached;
+    public event Action<IInteractable> FinishReached;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.TryGetComponent(out Finish finish))
+        if(collision.TryGetComponent(out IInteractable finish))
         {
             FinishReached?.Invoke(finish);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.TryGetComponent(out IInteractable _))
+        {
+            FinishReached?.Invoke(null);
         }
     }
 }

@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     private PlayerAnimator _animator;
     private CollisionHendler _collisionHendler;
     
-    private Finish _finish;
+    private IInteractable _interactable;
 
     private void Awake()
     {
@@ -41,12 +41,12 @@ public class Player : MonoBehaviour
 
         if (_inputReader.GetIsJump() && _groundDetector.IsGround)
             _mover.Jump();
-        if (_inputReader.GetIsInteract() && _finish != null)
-            _finish.Interact();
+        if (_inputReader.GetIsInteract() && _interactable != null)
+            _interactable.Interact();
     }
 
-    private void OnFinishReached(Finish finish) 
+    private void OnFinishReached(IInteractable interactable) 
     {
-        _finish = finish;
+        _interactable = interactable;
     }
 }
