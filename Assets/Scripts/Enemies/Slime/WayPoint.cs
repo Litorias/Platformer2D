@@ -1,3 +1,3 @@
 using UnityEngine;
 
-public class WeyPoint : MonoBehaviour { }
+public class WayPoint : MonoBehaviour { }
