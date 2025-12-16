@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -9,12 +6,16 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private WayPoint[] _wayPoints;
     [SerializeField] private float _speedX = 1;
+    [SerializeField] private float _waitTime = 1f;
 
     private Rigidbody2D _rigidbody;
     private bool _isTurnRight = true;
     private int _wayPointIndex;
     private Transform _target;
     private float _maxSqrDistance = 0.03f;
+    private bool _isWaiting = false;
+    private float _endWaitTime;
+
 
     private void Start()
     {
@@ -24,10 +25,20 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
+        if (_isWaiting == false)
+            Move();
 
-        if (IsTargetReached())
+        if (IsTargetReached() && _isWaiting == false)
+        {
+            _isWaiting = true;
+            _endWaitTime = Time.time + _waitTime;
+        }
+
+        if (_isWaiting && _endWaitTime <= Time.time)
+        {
             ChangeTarget();
+            _isWaiting = false;
+        }
     }
 
     private void Move()
@@ -51,15 +62,9 @@ public class Enemy : MonoBehaviour
         if ((transform.position.x < _target.position.x && _isTurnRight == false)
             || (transform.position.x > _target.position.x && _isTurnRight))
         {
-            Flip();
+            _isTurnRight = !_isTurnRight;
+            transform.Flip();
         }
     }
 
-    private void Flip()
-    {
-        _isTurnRight = !_isTurnRight;
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
-    }
 }

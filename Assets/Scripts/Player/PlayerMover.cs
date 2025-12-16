@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -30,16 +27,8 @@ public class PlayerMover : MonoBehaviour
         if ((direction > 0 && _isTurnRight == false)
             || (direction < 0 && _isTurnRight))
         {
-            Flip();
+            _isTurnRight = !_isTurnRight;
+            transform.Flip();
         }
     }
-
-    private void Flip()
-    {
-        _isTurnRight = !_isTurnRight;
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
-    }
-
 }
