@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private WayPoint[] _wayPoints;
     [SerializeField] private float _speedX = 1;
     [SerializeField] private float _waitTime = 1f;
+    [SerializeField] private Vector2 _seeAreaSize;
 
     private Rigidbody2D _rigidbody;
     private bool _isTurnRight = true;
@@ -25,6 +26,13 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Collider2D hit = Physics2D.OverlapBox(GetLookAreaOrigin(), _seeAreaSize, 0);
+
+        if (hit != null)
+        {
+            Debug.Log(hit.gameObject.name);
+        }
+
         if (_isWaiting == false)
             Move();
 
@@ -65,6 +73,20 @@ public class Enemy : MonoBehaviour
             _isTurnRight = !_isTurnRight;
             transform.Flip();
         }
+    }
+
+
+    private Vector2 GetLookAreaOrigin()
+    {
+        float halfCoefficient = 2;
+        int directionCoefficient = _isTurnRight ? 1 : -1;
+        float originX = transform.position.x + _seeAreaSize.x / halfCoefficient * directionCoefficient;
+        return new Vector2(originX, transform.position.y);
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(GetLookAreaOrigin(), _seeAreaSize);
     }
 
 }
